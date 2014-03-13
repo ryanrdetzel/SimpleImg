@@ -1,0 +1,58 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SimpleImg</title>
+<link href="http://fonts.googleapis.com/css?family=Lobster" rel="stylesheet" type="text/css">
+<style>
+body{
+  text-align:center;
+}
+h1 {
+    font-family: 'Lobster', Georgia, Times, serif;
+    font-size: 70px;
+    line-height: 100px;
+    color:#4a5f90;
+}
+#fileupload{
+  display:none;
+}
+</style>
+</head>
+<body>
+
+<h1>Drag an image here.</h1>
+<input id="fileupload" type="file" name="files[]" data-url="/upload" multiple>
+<div id="preview_content"></div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script src="/js/vendor/jquery.ui.widget.js"></script>
+<script src="/js/jquery.iframe-transport.js"></script>
+<script src="/js/jquery.fileupload.js"></script>
+<script>
+$(function () {
+    'use strict';
+    var $preview_content = $('#preview_content');
+    var $heading = $('h1');
+
+    $('#fileupload').fileupload({
+        dataType: 'json',
+        add: function (e, data) {
+            data.submit();
+            $heading.html("Uploading...");
+        },
+        progressall: function (e, data) {
+          var progress = parseInt(data.loaded / data.total * 100, 10);
+          $heading.html("Uploading..." + progress + '%');
+        },
+        done: function (e, data) {
+            $.each(data.result.files, function (index, file) {
+                $('<img/>').attr('src', file).prependTo($preview_content);
+            });
+            $heading.html('Drag and image here');
+        },
+    });
+});
+</script>
+</body> 
+</html>
